@@ -62,20 +62,8 @@ function formatHotSearchData(platform, data) {
   return content;
 }
 
-// 检查是否在推送时间范围内
-function isInPushTimeRange() {
-  const now = new Date();
-  const hour = now.getHours();
-  return hour >= 7 && hour <= 22;
-}
-
 // 主函数
 async function main() {
-  // 检查是否在推送时间范围内
-  if (!isInPushTimeRange()) {
-    console.log('当前时间不在推送范围内（7:00-22:00）');
-    return;
-  }
 
   console.log('开始获取热搜数据...');
   
