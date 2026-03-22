@@ -1,0 +1,36 @@
+name: Hot Search Push
+
+on:
+  schedule:
+    - cron: '0 0,4,8,12 * * *'  # 对应UTC时间，转换为北京时间为8:00, 12:00, 16:00, 20:00
+  push:
+    branches:
+      - master
+
+jobs:
+  push-hot-search:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build project
+        run: npm run build
+
+      - name: Start backend service
+        run: npm start &
+
+      - name: Wait for service to start
+        run: sleep 10
+
+      - name: Push hot search data
+        env:
+          SCKEY: ${{ secrets.SCKEY }}
+        run: node push_script.js
