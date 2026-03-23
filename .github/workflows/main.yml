@@ -8,18 +8,29 @@ on:
       - master
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   push-hot-search:
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
     steps:
-      - uses: actions/checkout@v4
+      - name: 设置时区（调试用）
+        run: sudo timedatectl set-timezone UTC
+      
+      - name: 输出当前时间（调试）
+        run: date
+        
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Set up Node.js
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '24'
+          node-version: '20'
 
       - name: Install dependencies
         run: npm install
@@ -36,4 +47,12 @@ jobs:
       - name: Push hot search data
         env:
           SCKEY: ${{ secrets.SCKEY }}
-        run: node push_script.js
+        run: |
+          echo "当前工作目录: $(pwd)"
+          node push_script.js
+          if [ $? -eq 0 ]; then
+            echo "✅ 热榜数据推送成功"
+          else
+            echo "❌ 热榜数据推送失败！"
+            exit 1
+          fi
