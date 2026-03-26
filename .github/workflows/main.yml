@@ -1,8 +1,8 @@
 name: Hot Search Push
 
 on:
-  schedule:
-    - cron: '0 0,4,8,12 * * *'  # 对应UTC时间，转换为北京时间为8:00, 12:00, 16:00, 20:00
+  # schedule:
+  #   - cron: '0 0,4,8,12 * * *'  # 对应UTC时间，转换为北京时间为8:00, 12:00, 16:00, 20:00
   push:
     branches:
       - master
